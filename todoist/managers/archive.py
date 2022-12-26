@@ -66,23 +66,19 @@ class ArchiveManager(object):
         return ret
 
     def _request_headers(self):
-        return {"Authorization": "Bearer {}".format(self.api.token)}
+        return {"Authorization": f"Bearer {self.api.token}"}
 
     def _iterate(self):
         has_more = True
         cursor = None
 
-        while True:
-            if not has_more:
-                break
-
+        while has_more:
             resp = self.next_page(cursor)
 
             elements = [self._make_element(data) for data in resp[self.element_type]]
             has_more = resp["has_more"]
             cursor = resp.get("next_cursor")
-            for el in elements:
-                yield el
+            yield from elements
 
     def _make_element(self, data):
         return self.object_model(data, self.api)
@@ -93,7 +89,7 @@ class SectionsArchiveManagerMaker(object):
         self.api = api
 
     def __repr__(self):
-        return "{}()".format(self.__class__.__name__)
+        return f"{self.__class__.__name__}()"
 
     def for_project(self, project_id):
         """Get manager to iterate over all archived sections for project."""
@@ -109,13 +105,12 @@ class SectionsArchiveManager(ArchiveManager):
         self.project_id = project_id
 
     def __repr__(self):
-        return "SectionsArchiveManager(project_id={})".format(self.project_id)
+        return f"SectionsArchiveManager(project_id={self.project_id})"
 
     def sections(self):
         # type: () -> Iterator[Section]
         """Iterate over all archived sections."""
-        for obj in self._iterate():
-            yield obj
+        yield from self._iterate()
 
     def _next_query_params(self, cursor):
         ret = super(SectionsArchiveManager, self)._next_query_params(cursor)
@@ -128,7 +123,7 @@ class ItemsArchiveManagerMaker(object):
         self.api = api
 
     def __repr__(self):
-        return "{}()".format(self.__class__.__name__)
+        return f"{self.__class__.__name__}()"
 
     def for_project(self, project_id):
         """Get manager to iterate over all top-level archived items for project."""
@@ -156,13 +151,12 @@ class ItemsArchiveManager(ArchiveManager):
 
     def __repr__(self):
         k, v = self._key_value()
-        return "ItemsArchiveManager({}={})".format(k, v)
+        return f"ItemsArchiveManager({k}={v})"
 
     def items(self):
         # type: () -> Iterator[Item]
         """Iterate over all archived items."""
-        for obj in self._iterate():
-            yield obj
+        yield from self._iterate()
 
     def _next_query_params(self, cursor):
         ret = super(ItemsArchiveManager, self)._next_query_params(cursor)

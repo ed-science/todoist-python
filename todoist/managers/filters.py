@@ -29,8 +29,7 @@ class FiltersManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates a filter remotely.
         """
-        args = {"id": filter_id}
-        args.update(kwargs)
+        args = {"id": filter_id} | kwargs
         cmd = {
             "type": "filter_update",
             "uuid": self.api.generate_uuid(),

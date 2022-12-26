@@ -375,11 +375,10 @@ class TodoistAPI(object):
             return
         ret = self.sync(commands=self.queue)
         del self.queue[:]
-        if "sync_status" in ret:
-            if raise_on_error:
-                for k, v in ret["sync_status"].items():
-                    if v != "ok":
-                        raise SyncError(k, v)
+        if "sync_status" in ret and raise_on_error:
+            for k, v in ret["sync_status"].items():
+                if v != "ok":
+                    raise SyncError(k, v)
         return ret
 
     # Miscellaneous
@@ -389,16 +388,14 @@ class TodoistAPI(object):
         DEPRECATED: query endpoint is deprecated for a long time and this
         method will be removed in the next major version of todoist-python
         """
-        params = {"queries": json_dumps(queries), "token": self.token}
-        params.update(kwargs)
+        params = {"queries": json_dumps(queries), "token": self.token} | kwargs
         return self._get("query", params=params)
 
     def add_item(self, content, **kwargs):
         """
         Adds a new task.
         """
-        params = {"token": self.token, "content": content}
-        params.update(kwargs)
+        params = {"token": self.token, "content": content} | kwargs
         if "labels" in params:
             params["labels"] = str(params["labels"])
         return self._get("add_item", params=params)
@@ -409,7 +406,7 @@ class TodoistAPI(object):
         unsaved = "*" if len(self.queue) > 0 else ""
         email = self.user.get("email")
         email_repr = repr(email) if email else "<not synchronized>"
-        return "%s%s(%s)" % (name, unsaved, email_repr)
+        return f"{name}{unsaved}({email_repr})"
 
 
 def state_default(obj):

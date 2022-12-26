@@ -13,6 +13,5 @@ class CompletedManager(Manager):
         """
         Returns all user's completed items.
         """
-        params = {"token": self.token}
-        params.update(kwargs)
+        params = {"token": self.token} | kwargs
         return self.api._get("completed/get_all", params=params)

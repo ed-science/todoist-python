@@ -11,8 +11,7 @@ class GenericNotesManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates an note remotely.
         """
-        args = {"id": note_id}
-        args.update(kwargs)
+        args = {"id": note_id} | kwargs
         cmd = {
             "type": "note_update",
             "uuid": self.api.generate_uuid(),

@@ -37,16 +37,17 @@ class GetByIdMixin(object):
                 return obj
 
         if not only_local and self.object_type is not None:
-            getter = getattr(eval("self.api.%ss" % self.object_type), "get")
+            getter = getattr(eval(f"self.api.{self.object_type}s"), "get")
             data = getter(obj_id)
 
-            # retrieves from state, otherwise we return the raw data
-            for obj in self.state[self.state_name]:
-                if obj["id"] == obj_id or obj.temp_id == str(obj_id):
-                    return obj
-
-            return data
-
+            return next(
+                (
+                    obj
+                    for obj in self.state[self.state_name]
+                    if obj["id"] == obj_id or obj.temp_id == str(obj_id)
+                ),
+                data,
+            )
         return None
 
 

@@ -32,8 +32,7 @@ class ItemsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates an item remotely.
         """
-        args = {"id": item_id}
-        args.update(kwargs)
+        args = {"id": item_id} | kwargs
         cmd = {
             "type": "item_update",
             "uuid": self.api.generate_uuid(),
@@ -174,8 +173,7 @@ class ItemsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Returns a project's completed items.
         """
-        params = {"token": self.token, "project_id": project_id}
-        params.update(kwargs)
+        params = {"token": self.token, "project_id": project_id} | kwargs
         return self.api._get("items/get_completed", params=params)
 
     def get(self, item_id):
