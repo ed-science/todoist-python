@@ -29,8 +29,7 @@ class RemindersManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates a reminder remotely.
         """
-        args = {"id": reminder_id}
-        args.update(kwargs)
+        args = {"id": reminder_id} | kwargs
         cmd = {
             "type": "reminder_update",
             "uuid": self.api.generate_uuid(),

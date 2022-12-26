@@ -12,7 +12,11 @@ class CollaboratorStatesManager(Manager, SyncMixin):
         Finds and returns the collaborator state based on the project and user
         ids.
         """
-        for obj in self.state[self.state_name]:
-            if obj["project_id"] == project_id and obj["user_id"] == user_id:
-                return obj
-        return None
+        return next(
+            (
+                obj
+                for obj in self.state[self.state_name]
+                if obj["project_id"] == project_id and obj["user_id"] == user_id
+            ),
+            None,
+        )

@@ -29,8 +29,7 @@ class LabelsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates a label remotely.
         """
-        args = {"id": label_id}
-        args.update(kwargs)
+        args = {"id": label_id} | kwargs
         cmd = {
             "type": "label_update",
             "uuid": self.api.generate_uuid(),

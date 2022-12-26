@@ -9,8 +9,7 @@ class UploadsManager(Manager):
 
         param filename: (str) name of file to upload
         """
-        data = {"token": self.token}
-        data.update(kwargs)
+        data = {"token": self.token} | kwargs
         files = {"file": open(filename, "rb")}
         return self.api._post("uploads/add", data=data, files=files)
 
@@ -22,8 +21,7 @@ class UploadsManager(Manager):
             limit: (int, optional) number of results (1-50)
             last_id: (int, optional) return results with id<last_id
         """
-        params = {"token": self.token}
-        params.update(kwargs)
+        params = {"token": self.token} | kwargs
         return self.api._get("uploads/get", params=params)
 
     def delete(self, file_url):

@@ -29,8 +29,7 @@ class SectionsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates a section remotely.
         """
-        args = {"id": section_id}
-        args.update(kwargs)
+        args = {"id": section_id} | kwargs
         cmd = {
             "type": "section_update",
             "uuid": self.api.generate_uuid(),

@@ -13,7 +13,7 @@ class ProjectsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         Creates a local project object.
         """
         obj = models.Project({"name": name}, self.api)
-        obj.temp_id = obj["id"] = "$" + self.api.generate_uuid()
+        obj.temp_id = obj["id"] = f"${self.api.generate_uuid()}"
         obj.data.update(kwargs)
         self.state[self.state_name].append(obj)
         cmd = {
@@ -29,12 +29,10 @@ class ProjectsManager(Manager, AllMixin, GetByIdMixin, SyncMixin):
         """
         Updates a project remotely.
         """
-        obj = self.get_by_id(project_id)
-        if obj:
+        if obj := self.get_by_id(project_id):
             obj.data.update(kwargs)
 
-        args = {"id": project_id}
-        args.update(kwargs)
+        args = {"id": project_id} | kwargs
         cmd = {
             "type": "project_update",
             "uuid": self.api.generate_uuid(),

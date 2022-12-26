@@ -7,6 +7,5 @@ class QuickManager(Manager):
         """
         Quick add task implementation.
         """
-        params = {"token": self.token, "text": text}
-        params.update(kwargs)
+        params = {"token": self.token, "text": text} | kwargs
         return self.api._get("quick/add", params=params)

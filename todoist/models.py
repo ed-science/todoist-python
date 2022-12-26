@@ -20,7 +20,7 @@ class Model(object):
     def __repr__(self):
         formatted_dict = pformat(dict(self.data))
         classname = self.__class__.__name__
-        return "%s(%s)" % (classname, formatted_dict)
+        return f"{classname}({formatted_dict})"
 
     def __contains__(self, value):
         return value in self.data

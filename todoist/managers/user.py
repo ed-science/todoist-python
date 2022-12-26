@@ -52,8 +52,7 @@ class UserManager(Manager):
         the server.
 
         """
-        data = {"email": email, "oauth2_token": oauth2_token}
-        data.update(kwargs)
+        data = {"email": email, "oauth2_token": oauth2_token} | kwargs
         data = self.api._post("user/login_with_google", data=data)
         if "token" in data:
             self.api.token = data["token"]
@@ -63,8 +62,7 @@ class UserManager(Manager):
         """
         Registers a new user.
         """
-        data = {"email": email, "full_name": full_name, "password": password}
-        data.update(kwargs)
+        data = {"email": email, "full_name": full_name, "password": password} | kwargs
         data = self.api._post("user/register", data=data)
         if "token" in data:
             self.api.token = data["token"]
@@ -74,8 +72,7 @@ class UserManager(Manager):
         """
         Deletes an existing user.
         """
-        params = {"token": self.token, "current_password": current_password}
-        params.update(kwargs)
+        params = {"token": self.token, "current_password": current_password} | kwargs
         return self.api._get("user/delete", params=params)
 
     def update_notification_setting(self, notification_type, service, dont_notify):

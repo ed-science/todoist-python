@@ -31,10 +31,7 @@ def test_user_settings_update(api_endpoint, api_token):
     api = todoist.api.TodoistAPI(api_token, api_endpoint)
     api.sync()
     reminder_email = api.state["user_settings"]["reminder_email"]
-    if reminder_email:
-        reminder_email = False
-    else:
-        reminder_email = True
+    reminder_email = not reminder_email
     api.user_settings.update(reminder_email=reminder_email)
     api.commit()
     assert reminder_email == api.state["user_settings"]["reminder_email"]
@@ -1181,11 +1178,9 @@ def test_items_archive(cleanup, api_endpoint, api_token):
 
     # Create and complete five tasks
     project = api.projects.add("Project")
-    items = [
-        api.items.add("task{}".format(i), project_id=project["id"]) for i in range(5)
-    ]
+    items = [api.items.add(f"task{i}", project_id=project["id"]) for i in range(5)]
     for i, item in enumerate(items):
-        date_completed = "2019-01-01T00:00:0{}Z".format(i)
+        date_completed = f"2019-01-01T00:00:0{i}Z"
         api.items.complete(item_id=item["id"], date_completed=date_completed)
     api.commit()
 
@@ -1205,10 +1200,10 @@ def test_sections_archive(cleanup, api_endpoint, api_token):
     # Create and complete five sections
     project = api.projects.add("Project")
     sections = [
-        api.sections.add("s{}".format(i), project_id=project["id"]) for i in range(5)
+        api.sections.add(f"s{i}", project_id=project["id"]) for i in range(5)
     ]
     for i, section in enumerate(sections):
-        date_archived = "2019-01-01T00:00:0{}Z".format(i)
+        date_archived = f"2019-01-01T00:00:0{i}Z"
         api.sections.archive(section_id=section["id"], date_archived=date_archived)
     api.commit()
 
